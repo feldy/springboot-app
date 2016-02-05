@@ -1,5 +1,0 @@
-com/feldy/springboot/domain/Product.class
-com/feldy/springboot/App.class
-com/feldy/springboot/web/ProductController.class
-com/feldy/springboot/service/CustomRepository.class
-com/feldy/springboot/service/ProductRepository.class
