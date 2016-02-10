@@ -6,6 +6,8 @@
 
 package com.feldy.springboot.service;
 
+import com.feldy.springboot.domain.Product;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +15,6 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.Parameter;
 import javax.persistence.Query;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,8 @@ public class CustomRepository {
     
     @Autowired
     private EntityManager em;
-    
+    @Autowired
+    private ProductRepository pr;
     public List<Map<String, Object>> findAllByKode(final String kode) {
         logger.debug(">>>> masuk custom query");
         
@@ -40,10 +42,10 @@ public class CustomRepository {
         final List<String> filters = new ArrayList<>();
         final Map<String, Object> parameterMaps = new HashMap<>();
         
-        if (!StringUtils.isEmpty(kode)) {
-            parameterMaps.put("prmKode", "%" + kode + "%");
-            filters.add(" obj.kode like :prmKode ");
-        }
+//        if (!StringUtils.isEmpty(kode)) {
+//            parameterMaps.put("prmKode", "%" + kode + "%");
+//            filters.add(" obj.kode like :prmKode ");
+//        }
         
         final StringBuilder strFilters = new StringBuilder();
         int cnt = 0;
@@ -57,8 +59,9 @@ public class CustomRepository {
         }
         
         StringBuilder sb = new StringBuilder();
-        sb.append("SELECT  new map(obj.id as id, obj.kode as kode) ");
-        sb.append("FROM    Product obj  ");
+        sb.append("SELECT  product.nama ");
+        sb.append("FROM    Sales obj  ");
+        sb.append("LEFT    JOIN obj.productSID product ");
         sb.append(strFilters.toString());
 
         Query qry = em.createQuery(sb.toString());
@@ -67,5 +70,16 @@ public class CustomRepository {
         }
         
         return qry.getResultList(); 
+    }
+    
+    @Transactional(readOnly = false)
+    public void  saveDataProduct(Product p) throws Exception{
+        Product product = new Product();
+        
+        product.setKode(p.getKode());
+        product.setNama(p.getNama());
+        product.setPrice(p.getPrice());
+        
+        pr.save(product);
     }
 }

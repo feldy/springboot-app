@@ -7,21 +7,22 @@
 package com.feldy.springboot.domain;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
  *
  * @author feldy
  */
-@Entity @Table(name = "m_product")
-public class Product {
-    
-    @Id @GeneratedValue
-    private Long id;
+@Entity 
+@Table(name = "m_product")
+public class Product extends BaseEntity {
+    private static final long serialVersionUID = 1L;
     
     @Column(nullable = false, unique = true)
     private String kode;
@@ -30,16 +31,19 @@ public class Product {
     private String nama;
     
     @Column(nullable = false)
-    private BigDecimal price;
+    private String price;
+    
+    @OneToMany(mappedBy = "productSID", fetch = FetchType.LAZY)
+    private List<Sales> productSIDSales = new ArrayList<>();
 
-    public Long getId() {
-        return id;
+    public List<Sales> getProductSIDSales() {
+        return productSIDSales;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setProductSIDSales(List<Sales> productSIDSales) {
+        this.productSIDSales = productSIDSales;
     }
-
+    
     public String getKode() {
         return kode;
     }
@@ -56,11 +60,11 @@ public class Product {
         this.nama = nama;
     }
 
-    public BigDecimal getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(String price) {
         this.price = price;
     }
     
