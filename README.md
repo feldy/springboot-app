@@ -1,3 +1,4 @@
 # springboot-app
 Aplikasi Menggunakan Spring Boot
-coba push
+
+Buat database dengan nama : "springbootdemo"
